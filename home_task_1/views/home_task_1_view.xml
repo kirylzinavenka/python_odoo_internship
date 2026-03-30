@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_home_task_1_list" model="ir.ui.view">
+            <field name="name">home.task.1.list</field>
+            <field name="model">home.task.1</field>
+            <field name="arch" type="xml">
+                <list string="Home Tasks">
+                    <field name="text"/>
+                    <field name="check1"/>
+                    <field name="check2"/>
+                    <field name="check_all"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_home_task_1_form" model="ir.ui.view">
+            <field name="name">home.task.1.form</field>
+            <field name="model">home.task.1</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button
+                            name="action_create_partner"
+                            string="Добавить человека"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="is_company"
+                        />
+                        <button
+                            name="action_create_partner"
+                            string="Добавить компанию"
+                            type="object"
+                            class="btn-primart"
+                            invisible="not is_company"
+                        />
+                        <button
+                            name="action_open_wizard"
+                            string="Добавить партнера"
+                            type="object"
+                            class="btn-primary"
+                        />
+                    </header>
+                    <sheet>
+                        <group string="Основная информация">
+                            <group>
+                                <field name="text"/>
+                                <field name="is_company"/>
+                                <field name="check1"/>
+                                <field name="check2"/>
+                                <field name="check_all"/>
+                            </group>
+
+                            <group invisible="not id">
+                                <field name="user_id"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="monetary_field"/>
+                                <field name="date_field"/>
+                                <field name="datetime_field"/>
+                                <field name="integer_field"/>
+                                <field name="float_field"/>
+                            </group>
+                        </group>
+
+                        <notebook invisible="not id">
+                            <page string="Чекбоксы и Селекторы" name="checks">
+                                <group>
+                                    <group string="Выбор">
+                                        <field name="select1"/>
+                                        <field name="select2"/>
+                                    </group>
+                                </group>
+                                <group string="Сетка 1-9">
+                                    <div class="d-flex flex-wrap align-items-center">
+                                        <div invisible="select1 != '1' and select2 != '4'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean1" nolabel="1"/>
+                                            <label for="boolean1" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '1' and select2 != '5'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean2" nolabel="1"/>
+                                            <label for="boolean2" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '1' and select2 != '6'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean3" nolabel="1"/>
+                                            <label for="boolean3" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '2' and select2 != '4'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean4" nolabel="1"/>
+                                            <label for="boolean4" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '2' and select2 != '5'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean5" nolabel="1"/>
+                                            <label for="boolean5" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '2' and select2 != '6'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean6" nolabel="1"/>
+                                            <label for="boolean6" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '3' and select2 != '4'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean7" nolabel="1"/>
+                                            <label for="boolean7" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '3' and select2 != '5'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean8" nolabel="1"/>
+                                            <label for="boolean8" class="ms-2"/>
+                                        </div>
+                                        <div invisible="select1 != '3' and select2 != '6'" class="me-4 d-flex align-items-center mb-2">
+                                            <field name="boolean9" nolabel="1"/>
+                                            <label for="boolean9" class="ms-2"/>
+                                        </div>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Описание и Данные" name="details">
+                                <group>
+                                    <field name="text_field"/>
+                                    <field name="binary_field" widget="image" class="oe_avatar"/>
+                                </group>
+                                <separator string="Визуальный редактор"/>
+                                <field name="html_field"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_home_task_1" model="ir.actions.act_window">
+            <field name="name">Home Task 1</field>
+            <field name="res_model">home.task.1</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_home_task_1_root" name="Home Task" sequence="10"/>
+        <menuitem id="menu_home_task_1_main" name="Задачи" parent="menu_home_task_1_root" action="action_home_task_1"/>
+    </data>
+</odoo>
