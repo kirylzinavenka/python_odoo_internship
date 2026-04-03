@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_home_task_2_order_user,home.task.2.order,model_home_task_2_order,base.group_user,1,1,1,1
+access_home_task_2_order_line_user,home.task.2.order.line,model_home_task_2_order_line,base.group_user,1,1,1,1
