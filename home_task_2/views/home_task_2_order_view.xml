@@ -1,0 +1,62 @@
+<odoo>
+    <record id="view_home_task_2_order_form" model="ir.ui.view">
+        <field name="name">home.task.2.order.form</field>
+        <field name="model">home.task.2.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="button_confirm"
+                        string="Confirm"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="state != 'draft'"
+                    />
+                    <button
+                        name="button_draft"
+                        string="Draft"
+                        type="object"
+                        invisible="state != 'confirmed'"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="draft, confirmed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="state == 'confirmed'"/>
+                        <field name="discount"/>
+                        <field name="currency_id" invisible="True"/>
+                    </group>
+                    <notebook>
+                        <page string="Lines" name="order_lines">
+                            <field name="order_line_ids" nolabel="True">
+                                <list editable="bottom"
+                                      create="parent.state == 'draft'"
+                                      delete="parent.state == 'draft'">
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="initial_price" readonly="parent.state == 'confirmed'"/>
+                                    <field name="discount"/>
+                                    <field name="final_price"/>
+                                    <field name="quantity" readonly="parent.state == 'confirmed'"/>
+                                    <field name="price_subtotal"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="amount_total"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_home_task_2_order" model="ir.actions.act_window">
+        <field name="name">Home Task Orders</field>
+        <field name="res_model">home.task.2.order</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_home_task_2_root" name="Home Task"/>
+    <menuitem id="menu_home_task_2_order" name="Orders" parent="menu_home_task_2_root" action="action_home_task_2_order"/>
+</odoo>
