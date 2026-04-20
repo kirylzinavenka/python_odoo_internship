@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_primary" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='child_ids']/form//field[@name='mobile']" position="after">
+                <field name="is_primary"/>
+            </xpath>
+
+            <xpath expr="//field[@name='child_ids']/kanban//field[@name='name']" position="after">
+                <field name="is_primary" invisible="True"/>
+            </xpath>
+
+            <xpath expr="//field[@name='child_ids']/kanban//field[@name='name']" position="after">
+                <div class="float-end" style="position: absolute; top: 5px; right: 5px; z-index: 10; font-size: 1.5rem;">
+                    <field name="is_primary" nolabel="True"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

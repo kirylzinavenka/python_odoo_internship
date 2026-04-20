@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_unique_products" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.unique.products</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_template_id']" position="attributes">
+                <attribute name="domain">
+                    [
+                        ("sale_ok", "=", True),
+                        ("product_variant_ids", "not in", parent.selected_product_json)
+                    ]
+                </attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_order_form_inherit_express" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.express</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='order_line']/list//field[@name='name']" position="after">
+                <field name="is_express_delivery"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
