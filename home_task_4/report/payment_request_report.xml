@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_payment_request" model="ir.actions.report">
+        <field name="name">Payment Request</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">home_task_4.report_payment_request_view</field>
+        <field name="report_file">home_task_4.report_payment_request_view</field>
+        <field name="print_report_name">'Payment Request - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_payment_request_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-size: 13px;">
+
+                        <table class="table table-bordered"
+                               style="width: 100%; table-layout: fixed; border: 1px solid black; margin-bottom: 20px;">
+                            <tr>
+                                <td colspan="2" style="word-wrap: break-word;">
+                                    <strong>Bank Name:</strong><br/>
+                                    <span t-field="doc.company_id.partner_id.bank_ids[:1].bank_id.name"/>
+                                </td>
+                                <td style="word-wrap: break-word;">
+                                    <strong>BIC / SWIFT:</strong> <br/>
+                                    <span t-field="doc.company_id.partner_id.bank_ids[:1].bank_id.bic"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="word-wrap: break-word;">
+                                    <strong>Beneficiary:</strong> <br/>
+                                    <span t-field="doc.company_id.name"/>
+                                </td>
+                                <td rowspan="2" class="align-middle" style="word-wrap: break-word;">
+                                    <strong>IBAN:</strong> <br/>
+                                    <span t-field="doc.company_id.partner_id.bank_ids[:1].acc_number"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 25%;">
+                                    <strong>VAT ID:</strong> <br/>
+                                    <span t-field="doc.company_id.vat"/>
+                                </td>
+                                <td style="width: 25%;">
+                                    <strong>Reg. No:</strong> <br/>
+                                    <span t-field="doc.company_id.company_registry"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h3 class="text-center" style="margin-top: 30px; margin-bottom: 30px;">
+                            Payment Request No. <span t-field="doc.name"/> from
+                            <span t-field="doc.date_order" t-options='{"widget": "date"}'/>
+                        </h3>
+
+                        <div class="row"
+                             style="border-top: 1px solid black; border-bottom: 1px solid black; padding: 10px 0;">
+                            <div class="col-6">
+                                <strong>Vendor:</strong><br/>
+                                <div t-field="doc.company_id.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Customer:</strong><br/>
+                                <div t-field="doc.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                <t t-if="doc.partner_id.vat">
+                                    VAT: <span t-field="doc.partner_id.vat"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <br/>
+
+                        <table class="table table-sm table-bordered"
+                               style="width: 100%; table-layout: fixed; margin-top: 20px;">
+                            <thead style="background-color: #f2f2f2;">
+                                <tr>
+                                    <th style="width: 5%;" class="text-center">No.</th>
+                                    <th style="width: 45%;">Description</th>
+                                    <th style="width: 10%;" class="text-end">Qty</th>
+                                    <th style="width: 10%;" class="text-center">Unit</th>
+                                    <th style="width: 10%;" class="text-end">Price</th>
+                                    <th style="width: 10%;" class="text-end">VAT</th>
+                                    <th style="width: 10%;" class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="counter" t-value="1"/>
+                                <t t-foreach="doc.order_line" t-as="line">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-out="counter"/>
+                                        </td>
+                                        <td style="word-wrap: break-word;">
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="line.product_uom_qty"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.product_uom"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="line.price_unit"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="line.price_subtotal"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="counter" t-value="counter + 1"/>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div class="row justify-content-end" style="margin-top: 20px;">
+                            <div class="col-5">
+                                <table class="table table-sm" style="width: 100%;">
+                                    <tr>
+                                        <td>Subtotal:</td>
+                                        <td class="text-end">
+                                            <span t-field="doc.amount_untaxed"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>VAT:</td>
+                                        <td class="text-end">
+                                            <span t-field="doc.amount_tax"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black" style="border-top: 2px solid black;">
+                                        <td>
+                                            <strong>Total:</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong>
+                                                <span t-field="doc.amount_total"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
