@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="CurrentDateSystray">
+        <div class="o_menu_systray_item o_nav_entry d-flex align-items-center px-2"
+             style="cursor: pointer;"
+             t-on-click="onClick">
+            <span t-esc="currentDate"/>
+        </div>
+    </t>
+
+</templates>
