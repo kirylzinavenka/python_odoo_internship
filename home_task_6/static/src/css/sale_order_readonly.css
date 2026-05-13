@@ -1,0 +1,7 @@
+div[name="order_line"] .o_field_x2many_list .o_data_row > .o_data_cell.o_readonly_modifier {
+    background-color: #f0f4ff;
+}
+
+div[name="order_line"] .o_field_x2many_list .o_data_row.o_selected_row > .o_data_cell.o_readonly_modifier {
+    background-color: #e8eeff;
+}
