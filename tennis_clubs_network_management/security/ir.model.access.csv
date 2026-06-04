@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tennis_sport_center,access.tennis.sport.center,model_tennis_sport_center,base.group_user,1,1,1,1
+access_tennis_court,access.tennis.court,model_tennis_court,base.group_user,1,1,1,1
+access_tennis_analytics_wizard,access.tennis.analytics.wizard,model_tennis_analytics_wizard,tennis_clubs_network_management.group_tennis_director,1,1,1,1
+access_tennis_profit_report_wizard,access.tennis.profit.report.wizard,model_tennis_profit_report_wizard,tennis_clubs_network_management.group_tennis_director,1,1,1,1

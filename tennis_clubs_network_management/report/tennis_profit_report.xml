@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_tennis_profit" model="ir.actions.report">
+            <field name="name">Profit report (PDF)</field>
+            <field name="model">tennis.profit.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">tennis_clubs_network_management.report_tennis_profit_template</field>
+            <field name="report_file">tennis_clubs_network_management.report_tennis_profit_template</field>
+            <field name="binding_model_id" ref="model_tennis_profit_report_wizard"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="report_tennis_profit_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: 'DejaVu Sans', sans-serif;">
+                            <div class="text-center mb-5">
+                                <h2>Tennis clubs network profit report</h2>
+                                <h4>
+                                    Period:
+                                    <span t-field="doc.date_from" t-options='{"widget": "date"}'/>
+                                    -
+                                    <span t-field="doc.date_to" t-options='{"widget": "date"}'/>
+                                </h4>
+                            </div>
+                            <t t-set="total_profit" t-value="0.0"/>
+                            <t t-foreach="doc.center_ids" t-as="center">
+                                <div class="mb-4">
+                                    <h3 class="border-bottom pb-2">
+                                        Sport center: <span t-field="center.name"/>
+                                    </h3>
+                                    <p><strong>Manager:</strong> <span t-field="center.manager_id.name"/></p>
+                                    <t t-set="trainings" t-value="doc.get_trainings_for_center(center)"/>
+                                    <table class="table table-sm table-striped mt-3">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Coach</th>
+                                                <th>Clients</th>
+                                                <th class="text-end">Customer price</th>
+                                                <th class="text-end">Coach payout</th>
+                                                <th class="text-end">Net profit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="center_total_profit" t-value="0.0"/>
+                                            <t t-foreach="trainings" t-as="training">
+                                                <tr>
+                                                    <td>
+                                                        <span t-field="training.start" t-options='{"widget": "datetime", "format": "dd.MM.yyyy HH:mm"}'/>
+                                                    </td>
+                                                    <td><span t-field="training.training_type"/></td>
+                                                    <td><span t-field="training.coach_id.name"/></td>
+                                                    <td>
+                                                        <span t-esc="', '.join(training.partner_ids.mapped('name'))"/>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span t-field="training.price_at_booking" t-options='{"display_currency": training.currency_id}'/>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span t-field="training.trainer_payout" t-options='{"display_currency": training.currency_id}'/>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span t-field="training.profit" t-options='{"display_currency": training.currency_id}'/>
+                                                    </td>
+                                                </tr>
+                                                <t t-set="center_total_profit" t-value="center_total_profit + training.profit"/>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                    <div class="row justify-content-end mb-4">
+                                        <div class="col-4 text-end">
+                                            <p class="border-top pt-2">
+                                                <strong>Subtotal profit: </strong>
+                                                <span t-esc="center_total_profit" t-options='{"widget": "monetary", "display_currency": center.currency_id}'/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <t t-set="total_profit" t-value="total_profit + center_total_profit"/>
+                                </div>
+                            </t>
+                            <div class="row justify-content-end mt-5">
+                                <div class="col-5 text-end border-top border-double pt-3">
+                                    <h3>
+                                        <strong>Total profit: </strong>
+                                        <span t-esc="total_profit" t-options='{"widget": "monetary", "display_currency": doc.env.company.currency_id}'/>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_tennis_profit_report_wizard" model="ir.actions.act_window">
+            <field name="name">Print profit report</field>
+            <field name="res_model">tennis.profit.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="tennis_profit_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">tennis.profit.report.wizard.form</field>
+            <field name="model">tennis.profit.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Print profit report">
+                    <sheet>
+                        <group string="Select period">
+                            <group>
+                                <field name="date_from"/>
+                            </group>
+                            <group>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+                        <group string="Select sport centers">
+                            <field name="center_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                        <footer>
+                            <button string="Print PDF"
+                                    name="button_print_pdf"
+                                    type="object"
+                                    class="btn-primary"/>
+                            <button string="Cancel"
+                                    class="btn-secondary"
+                                    special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_tennis_reporting"
+                  name="Reporting"
+                  parent="menu_tennis_root"
+                  groups="tennis_clubs_network_management.group_tennis_director"/>
+
+        <menuitem id="menu_tennis_profit_report"
+                  name="Profit report (PDF)"
+                  parent="menu_tennis_reporting"
+                  action="action_tennis_profit_report_wizard"/>
+    </data>
+</odoo>
