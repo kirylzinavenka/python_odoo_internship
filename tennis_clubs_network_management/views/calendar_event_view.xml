@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_calendar_event_training" model="ir.actions.act_window">
+            <field name="name">Trainings calendar</field>
+            <field name="res_model">calendar.event</field>
+            <field name="view_mode">calendar,list,form</field>
+            <field name="domain">[('is_tennis_training', '=', True)]</field>
+        </record>
+
+        <record id="act_calendar_event_training_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="calendar_event_training_view"/>
+            <field name="act_window_id" ref="action_calendar_event_training"/>
+        </record>
+
+        <record id="act_calendar_event_training_list" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="calendar_event_training_list_view"/>
+            <field name="act_window_id" ref="action_calendar_event_training"/>
+        </record>
+
+        <record id="act_calendar_event_training_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="calendar_event_training_form_view"/>
+            <field name="act_window_id" ref="action_calendar_event_training"/>
+        </record>
+
+        <record id="calendar_event_training_view" model="ir.ui.view">
+            <field name="name">calendar.event.training</field>
+            <field name="model">calendar.event</field>
+            <field name="arch" type="xml">
+                <calendar string="Trainings"
+                          date_start="start"
+                          date_stop="stop"
+                          color="training_type"
+                          quick_create="false"
+                          event_open_popup="true">
+                    <field name="name"/>
+                    <field name="coach_id"/>
+                    <field name="tennis_court_id"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="calendar_event_training_list_view" model="ir.ui.view">
+            <field name="name">calendar.event.training.list</field>
+            <field name="model">calendar.event</field>
+            <field name="arch" type="xml">
+                <list string="Trainings">
+                    <field name="name"/>
+                    <field name="start"/>
+                    <field name="stop"/>
+                    <field name="duration" widget="float_time"/>
+                    <field name="coach_id"/>
+                    <field name="tennis_court_id"/>
+                    <field name="state" widget="badge"
+                           decoration-info="state == 'draft'"
+                           decoration-warning="state == 'to_approve'"
+                           decoration-success="state == 'confirmed'"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="calendar_event_training_form_view" model="ir.ui.view">
+            <field name="name">calendar.event.training.form</field>
+            <field name="model">calendar.event</field>
+            <field name="arch" type="xml">
+                <form string="Training">
+                    <header>
+                        <button name="button_approve"
+                                string="Approve"
+                                type="object"
+                                class="btn-primary"
+                                invisible="state != 'to_approve'"
+                                groups="tennis_clubs_network_management.group_tennis_manager,tennis_clubs_network_management.group_tennis_director"/>
+
+                        <button name="button_complete"
+                                string="Complete training"
+                                type="object"
+                                class="btn-success"
+                                invisible="state != 'confirmed'"
+                                groups="tennis_clubs_network_management.group_tennis_manager,tennis_clubs_network_management.group_tennis_director"/>
+
+                        <button name="button_cancel"
+                                string="Cancel training"
+                                type="object"
+                                class="btn-secondary"
+                                invisible="state in ('done', 'cancel')"
+                                groups="tennis_clubs_network_management.group_tennis_manager,tennis_clubs_network_management.group_tennis_director"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,confirmed,done"/>
+                    </header>
+                    <sheet>
+                        <field name="is_tennis_training" invisible="True"/>
+                        <field name="is_coach_user" invisible="True"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="True"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Training Details">
+                                <field name="training_type"/>
+                                <field name="tennis_court_id" options="{'no_create': True}"/>
+                                <field name="tennis_sport_center_id" invisible="True"/>
+                                <field name="coach_id" options="{'no_create': True}" readonly="is_coach_user"/>
+                            </group>
+                            <group string="Schedule">
+                                <field name="start"/>
+                                <field name="stop"/>
+                                <field name="duration" widget="float_time"/>
+                                <field name="reminder_hours"/>
+                            </group>
+                        </group>
+
+                        <group string="Recurrence">
+                            <group>
+                                <field name="recurrency"/>
+                            </group>
+                            <group invisible="not recurrency">
+                                <field name="rrule_type" required="recurrency"/>
+                                <field name="end_type" required="recurrency"/>
+                                <field name="count" invisible="end_type != 'count'" required="end_type == 'count'"/>
+                                <field name="until" invisible="end_type != 'end_date'" required="end_type == 'end_date'"/>
+                            </group>
+                        </group>
+
+                        <group string="Weekly days" invisible="rrule_type != 'weekly' or not recurrency">
+                            <div class="o_row">
+                                <field name="mon"/> <label for="mon" class="me-3"/>
+                                <field name="tue"/> <label for="tue" class="me-3"/>
+                                <field name="wed"/> <label for="wed" class="me-3"/>
+                                <field name="thu"/> <label for="thu" class="me-3"/>
+                                <field name="fri"/> <label for="fri" class="me-3"/>
+                                <field name="sat"/> <label for="sat" class="me-3"/>
+                                <field name="sun"/> <label for="sun" class="me-3"/>
+                            </div>
+                        </group>
+
+                        <group>
+                            <field name="partner_ids" widget="many2many_tags" string="Clients"
+                                   domain="[('is_tennis_client', '=', True)]" options="{'no_create': True}"/>
+                        </group>
+
+                        <group string="Financials">
+                            <group>
+                                <field name="currency_id" invisible="True"/>
+                                <field name="price_at_booking"
+                                       groups="tennis_clubs_network_management.group_tennis_manager,tennis_clubs_network_management.group_tennis_director"/>
+                                <field name="rate_at_booking"/>
+                            </group>
+                            <group>
+                                <field name="trainer_payout"
+                                       groups="tennis_clubs_network_management.group_tennis_manager,tennis_clubs_network_management.group_tennis_director"/>
+                                <field name="profit"
+                                       groups="tennis_clubs_network_management.group_tennis_manager,tennis_clubs_network_management.group_tennis_director"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_calendar_event_training"
+                  name="Trainings schedule"
+                  parent="menu_tennis_root"
+                  action="action_calendar_event_training"/>
+    </data>
+</odoo>

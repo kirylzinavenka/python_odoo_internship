@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="False">
+        <record id="module_category_tennis_club" model="ir.module.category">
+            <field name="name">Tennis club management</field>
+        </record>
+
+        <record id="group_tennis_trainer" model="res.groups">
+            <field name="name">Coach</field>
+            <field name="category_id" ref="module_category_tennis_club"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_tennis_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_tennis_club"/>
+            <field name="implied_ids" eval="[(4, ref('group_tennis_trainer'))]"/>
+        </record>
+
+        <record id="group_tennis_director" model="res.groups">
+            <field name="name">Director</field>
+            <field name="category_id" ref="module_category_tennis_club"/>
+            <field name="implied_ids" eval="[(4, ref('group_tennis_manager'))]"/>
+        </record>
+
+        <record id="rule_tennis_sport_center_trainer_manager" model="ir.rule">
+            <field name="name">Coach and Manager: See own sport center only</field>
+            <field name="model_id" ref="model_tennis_sport_center"/>
+            <field name="groups" eval="[(4, ref('group_tennis_trainer')), (4, ref('group_tennis_manager'))]"/>
+            <field name="domain_force">[('id', '=', user.employee_id.tennis_sport_center_id.id)]</field>
+        </record>
+
+        <record id="rule_tennis_court_trainer_manager" model="ir.rule">
+            <field name="name">Coach and Manager: See own courts only</field>
+            <field name="model_id" ref="model_tennis_court"/>
+            <field name="groups" eval="[(4, ref('group_tennis_trainer')), (4, ref('group_tennis_manager'))]"/>
+            <field name="domain_force">[('tennis_sport_center_id', '=', user.employee_id.tennis_sport_center_id.id)]</field>
+        </record>
+
+        <record id="rule_tennis_training_trainer" model="ir.rule">
+            <field name="name">Coach: See own trainings only</field>
+            <field name="model_id" ref="model_calendar_event"/>
+            <field name="groups" eval="[(4, ref('group_tennis_trainer'))]"/>
+            <field name="domain_force">['|', ('is_tennis_training', '=', False), ('coach_id.user_id', '=', user.id)]</field>
+        </record>
+
+        <record id="rule_tennis_training_manager" model="ir.rule">
+            <field name="name">Manager: See all trainings in own center</field>
+            <field name="model_id" ref="model_calendar_event"/>
+            <field name="groups" eval="[(4, ref('group_tennis_manager'))]"/>
+            <field name="domain_force">['|', ('is_tennis_training', '=', False), ('tennis_sport_center_id', '=', user.employee_id.tennis_sport_center_id.id)]</field>
+        </record>
+
+        <record id="rule_tennis_sport_center_director" model="ir.rule">
+            <field name="name">Director: See all sport centers</field>
+            <field name="model_id" ref="model_tennis_sport_center"/>
+            <field name="groups" eval="[(4, ref('group_tennis_director'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="rule_tennis_court_director" model="ir.rule">
+            <field name="name">Director: See all courts</field>
+            <field name="model_id" ref="model_tennis_court"/>
+            <field name="groups" eval="[(4, ref('group_tennis_director'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="rule_tennis_training_director" model="ir.rule">
+            <field name="name">Director: See all trainings</field>
+            <field name="model_id" ref="model_calendar_event"/>
+            <field name="groups" eval="[(4, ref('group_tennis_director'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+    </data>
+</odoo>

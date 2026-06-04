@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_tennis_sport_center" model="ir.actions.act_window">
+            <field name="name">Sport centers</field>
+            <field name="res_model">tennis.sport.center</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="tennis_sport_center_list_view" model="ir.ui.view">
+            <field name="name">tennis.sport.center.list</field>
+            <field name="model">tennis.sport.center</field>
+            <field name="arch" type="xml">
+                <list string="Sport centers">
+                    <field name="name"/>
+                    <field name="manager_id"/>
+                    <field name="working_hours_start" widget="float_time"/>
+                    <field name="working_hours_end" widget="float_time"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="tennis_sport_center_form_view" model="ir.ui.view">
+            <field name="name">tennis.sport.center.form</field>
+            <field name="model">tennis.sport.center</field>
+            <field name="arch" type="xml">
+                <form string="Sport center">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Tennis sport center 1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Main information">
+                                <field name="manager_id" domain="[('is_manager', '=', True)]" options="{'no_create': True}"/>
+                                <field name="active"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                            </group>
+                            <group string="Working hours">
+                                <field name="working_hours_start" widget="float_time" placeholder="08:00"/>
+                                <field name="working_hours_end" widget="float_time" placeholder="22:00"/>
+                                <field name="reminder_hours"/>
+                            </group>
+                        </group>
+                        <group string="Training prices">
+                            <group>
+                                <field name="currency_id" invisible="True"/>
+                                <field name="individual_training_price"/>
+                                <field name="split_training_price"/>
+                                <field name="group_training_price"/>
+                            </group>
+                        </group>
+                        <group string="Center profit statistics" groups="tennis_clubs_network_management.group_tennis_director">
+                            <group>
+                                <field name="profit_date_from"/>
+                                <field name="profit_date_to"/>
+                            </group>
+                            <group>
+                                <field name="total_center_profit" readonly="True"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Courts" name="courts">
+                                <field name="tennis_court_ids">
+                                    <list editable="bottom">
+                                        <field name="name"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Coaches" name="coaches">
+                            <field name="coach_ids" readonly="True">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="work_phone"/>
+                                    <field name="coach_rate_individual"/>
+                                    <field name="coach_rate_split"/>
+                                    <field name="coach_rate_group"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_tennis_root"
+                  name="Tennis clubs"/>
+
+        <menuitem id="menu_tennis_management"
+                  name="Management"
+                  parent="menu_tennis_root"/>
+
+        <menuitem id="menu_tennis_sport_center"
+                  name="Sport centers"
+                  parent="menu_tennis_management"
+                  action="action_tennis_sport_center"/>
+    </data>
+</odoo>

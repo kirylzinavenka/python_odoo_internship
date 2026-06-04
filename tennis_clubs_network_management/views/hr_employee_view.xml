@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="employee_form_inherit_view" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Tennis club settings" name="tennis_settings">
+                        <group>
+                            <group string="Role setup">
+                                <field name="is_coach"/>
+                                <field name="is_manager"/>
+                                <field name="tennis_sport_center_id" options="{'no_create': True}"/>
+                                <field name="currency_id" invisible="True"/>
+                            </group>
+
+                            <group string="Coach rates (Hourly)" invisible="not is_coach">
+                                <field name="coach_rate_individual" widget="monetary"/>
+                                <field name="coach_rate_split" widget="monetary"/>
+                                <field name="coach_rate_group" widget="monetary"/>
+                            </group>
+
+                            <group string="Coach profit statistics" invisible="not is_coach">
+                                <group>
+                                    <field name="profit_date_from"/>
+                                    <field name="profit_date_to"/>
+                                </group>
+                                <group>
+                                    <field name="total_coach_profit" readonly="True"/>
+                                </group>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

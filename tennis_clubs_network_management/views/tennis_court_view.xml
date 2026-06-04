@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_tennis_court" model="ir.actions.act_window">
+            <field name="name">Tennis Courts</field>
+            <field name="res_model">tennis.court</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="tennis_court_list_view" model="ir.ui.view">
+            <field name="name">tennis.court.list</field>
+            <field name="model">tennis.court</field>
+            <field name="arch" type="xml">
+                <list string="Tennis courts">
+                    <field name="name"/>
+                    <field name="tennis_sport_center_id"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="tennis_court_form_view" model="ir.ui.view">
+            <field name="name">tennis.court.form</field>
+            <field name="model">tennis.court</field>
+            <field name="arch" type="xml">
+                <form string="Tennis court">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Court 1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="tennis_sport_center_id" options="{'no_create': True}"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_tennis_court"
+                  name="Courts"
+                  parent="menu_tennis_management"
+                  action="action_tennis_court"/>
+    </data>
+</odoo>

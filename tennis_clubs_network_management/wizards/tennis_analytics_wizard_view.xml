@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="action_tennis_analytics_wizard" model="ir.actions.act_window">
+            <field name="name">Business Analytics</field>
+            <field name="res_model">tennis.analytics.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="tennis_analytics_wizard_form_view" model="ir.ui.view">
+            <field name="name">tennis.analytics.wizard.form</field>
+            <field name="model">tennis.analytics.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Business analytics">
+                    <sheet>
+                        <group string="Select date range">
+                            <group>
+                                <field name="date_from"/>
+                            </group>
+                            <group>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+
+                        <group string="Top performers results">
+                            <field name="best_coach_id" options="{'no_open': True}"/>
+                            <field name="most_popular_type"/>
+                            <field name="most_active_client_id" options="{'no_open': True}"/>
+                        </group>
+
+                        <footer>
+                            <button string="Close" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_tennis_analytics"
+                  name="Analytics"
+                  parent="menu_tennis_root"
+                  action="action_tennis_analytics_wizard"
+                  groups="tennis_clubs_network_management.group_tennis_director"/>
+    </data>
+</odoo>
